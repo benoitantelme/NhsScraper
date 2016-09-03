@@ -33,7 +33,8 @@ public class SimpleScraper {
 	private final Map<String, ScrapedCondition> conditionsMap = new ConcurrentHashMap<String, ScrapedCondition>();
 	private final Set<String> scannedPartialUrl = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 	private final Set<String> failedPartialUrl = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-	private final ExecutorService pool = Executors.newFixedThreadPool(8);
+	private final ExecutorService pool = Executors.newFixedThreadPool(
+			Runtime.getRuntime().availableProcessors() > 8 ? 8 : Runtime.getRuntime().availableProcessors());
 
 	public Map<String, List<String>> scrapeNhsPagesToJson(String path) throws InterruptedException {
 		Map<String, List<String>> index = new HashMap<String, List<String>>();
