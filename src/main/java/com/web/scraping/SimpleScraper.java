@@ -122,6 +122,7 @@ public class SimpleScraper {
 			e1.printStackTrace();
 		}
 
+		if(conditionsPage != null){
 		Elements links = conditionsPage.select("a[href]");
 		for (Element link : links) {
 			final String partialUrl = link.attr(HREF);
@@ -134,6 +135,9 @@ public class SimpleScraper {
 
 			}
 
+		}
+		}else{
+			throw new RuntimeException("Could not connect to conditions pages for address " + address);
 		}
 
 		return validAdresses;

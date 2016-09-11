@@ -16,8 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-public class JsonUtils
-{
+public class JsonUtils {
 	public static final String JSON_EXTENSION = ".json";
 	protected static final Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
@@ -26,24 +25,12 @@ public class JsonUtils
 
 		if (object != null) {
 			String jsonObject = gson.toJson(object);
-			Writer writer = null;
-			try {
-				writer = new FileWriter(filename);
+			try (Writer writer = new FileWriter(filename)) {
 				writer.write(jsonObject);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				throw new RuntimeException("Issue with the json file writer and the file: " + filename, e);
 			}
-			finally {
-				try {
-					writer.close();
-				}
-				catch (IOException e) {
-					throw new RuntimeException("Issue closing the json file writer with the file: " + filename, e);
-				}
-			}
-		}
-		else {
+		} else {
 			System.out.println("ERROR:Object to be written there: " + filename + " is empty.");
 		}
 	}
@@ -64,8 +51,7 @@ public class JsonUtils
 		JsonReader reader;
 		try {
 			reader = new JsonReader(new FileReader(file.getPath()));
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			throw new RuntimeException("File: " + filePath + " not found.", e);
 		}
 
@@ -76,8 +62,7 @@ public class JsonUtils
 		T object = null;
 		try {
 			object = gson.fromJson(reader, type);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Issue while reading json from: " + filepath, e);
 		}
 
@@ -95,18 +80,15 @@ public class JsonUtils
 
 		if (Files.exists(originalPath)) {
 			workingPath = originalPath.toFile();
-		}
-		else {
+		} else {
 			URL resource = JsonUtils.class.getClassLoader().getResource(path);
 			if (resource != null) {
 				try {
 					workingPath = Paths.get(resource.toURI()).toFile();
-				}
-				catch (URISyntaxException e) {
+				} catch (URISyntaxException e) {
 					throw new RuntimeException("Issue with resource: " + resource, e);
 				}
-			}
-			else {
+			} else {
 				throw new RuntimeException("Trying to get URL from path:" + path + " but resource path is null.");
 			}
 		}
